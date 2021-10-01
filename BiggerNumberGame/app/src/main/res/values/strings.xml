@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BiggerNumberGame</string>
+    <string name="score_string">0</string>
+    <string name="score">Score:</string>
+    <string name="click_to">Click to</string>
+    <string name="start">Start</string>
+    <string name="choose_the_greater_number">Choose the Greater Number</string>
+</resources>

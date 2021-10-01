@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyViewModelDemo</string>
+    <string name="convert">Convert</string>
+    <string name="enter_dollar_amount">Enter Dollar Amount</string>
+</resources>

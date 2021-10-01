@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MyClicker</string>
+    <string name="crystal_mine_icon">Crystal Mine Icon</string>
+    <string name="crystals">Crystals:</string>
+    <string name="_0">0</string>
+    <string name="upgrades">Upgrades</string>
+    <string name="hard_reset">Hard Reset</string>
+    <string name="world_map">World Map</string>
+    <string name="buy_a_miner">Buy A Miner</string>
+    <string name="buy_a_minecart">Buy A Minecart</string>
+    <string name="upgrade_your_pick">Upgrade Your Pick</string>
+</resources>

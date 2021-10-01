@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="convert_string">Convert To Euros</string>
+    <string name="dollarText">dollars</string>
+    <string name="no_value_string">No Value</string>
+</resources>
