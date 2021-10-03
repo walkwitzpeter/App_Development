@@ -7,16 +7,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import com.example.myclicker.databinding.ActivityMainBinding;
 import com.example.myclicker.databinding.ActivityUpgradesBinding;
+// For saving state after App Closes
+import androidx.lifecycle.SavedStateViewModelFactory;
 
 public class MainActivity extends AppCompatActivity {
     // CONSTANTS
@@ -30,6 +34,40 @@ public class MainActivity extends AppCompatActivity {
     private MechanicDataManager mechanicDataManager;
 
     private final String TAG = "Debug";
+
+
+
+    // Saving state after app closes
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("MyCrystals", mechanicDataManager.getCrystals().getValue());
+        savedInstanceState.putInt("MyCrystalsPerSwing", mechanicDataManager.getCrystalsPerSwing().getValue());
+        savedInstanceState.putInt("MyPickCost", mechanicDataManager.getPickUpgradeCost().getValue());
+        savedInstanceState.putInt("MyMinerCost", mechanicDataManager.getMinerCost().getValue());
+        savedInstanceState.putInt("MyMiners", mechanicDataManager.getMiners().getValue());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        int savedCrystals = savedInstanceState.getInt("MyCrystals");
+        int savedCrystalsPerSwing = savedInstanceState.getInt("MyCrystalsPerSwing");
+        int savedPickCost = savedInstanceState.getInt("MyPickCost");
+        int savedMinerCost = savedInstanceState.getInt("MyMinerCost");
+        int savedMiners = savedInstanceState.getInt("MyMiners");
+        mechanicDataManager.setCrystals(savedCrystals);
+        mechanicDataManager.setCrystalsPerSwing(savedCrystalsPerSwing);
+        mechanicDataManager.setPickCost(savedPickCost);
+        mechanicDataManager.setMinerCost(savedMinerCost);
+        mechanicDataManager.setMiners(savedMiners);
+
+        // These are used to restart/set the things needed at startup
+        binding.crystalNumber.setText(mechanicDataManager.getCrystals().getValue().toString());
+        mechanicDataManager.startMinerTimer();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +95,7 @@ public class MainActivity extends AppCompatActivity {
         binding.crystalMine.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-//                        Log.i(TAG, mechanicDataManager.getCrystals().getValue().toString());
                         mechanicDataManager.addCrystals(mechanicDataManager.getCrystalsPerSwing().getValue());
-                        binding.crystalNumber.setText(String.valueOf(mechanicDataManager.getCrystals()
-                                                                        .getValue().toString()));
                     }
                 }
         );
@@ -84,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
                         mechanicDataManager.pickUpgrade();
                         upgradesBinding.pickUpgrade.setText(pickUpgradeString +
                                 mechanicDataManager.getPickUpgradeCost().getValue().toString());
-                        binding.crystalNumber.setText(String.valueOf(mechanicDataManager.getCrystals()
-                                .getValue().toString()));
                     }
                 }
         );
@@ -96,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
                         mechanicDataManager.addMiner();
                         upgradesBinding.minerButton.setText(minerUpgradeString +
                                 mechanicDataManager.getMinerCost().getValue().toString());
-                        binding.crystalNumber.setText(String.valueOf(mechanicDataManager.getCrystals()
-                                .getValue().toString()));
                     }
                 }
         );
@@ -128,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 //                public void onClick(View view) {
 ////                    if (crystals >= minerCost) {
 ////                        crystals -= minerCost;
-////                        minerCost += 1; //TODO get rid of hardcoded values both here, above, and below
+////                        minerCost += 1;
 ////                        miners += 1;
 ////
 ////                        mechanicDataManager.startTimer();

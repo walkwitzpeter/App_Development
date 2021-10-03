@@ -15,6 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.myclicker.databinding.ActivityMainBinding;
 import com.example.myclicker.databinding.ActivityUpgradesBinding;
 
+// Used for saving state after closed
+import androidx.lifecycle.SavedStateHandle;
+
 public class MechanicDataManager extends ViewModel {
     // Constants
     private final int initialCrystals = 0;
@@ -25,8 +28,8 @@ public class MechanicDataManager extends ViewModel {
     private final int crystalsPerMiner = 1;
     private final int pickCostExponentiation = 4;
     private final int crystalsPerSwingExponentiation = 2;
-    private final int minerCostExponentiation = 4;
-    final private long timeToWait = 10;
+    private final int minerCostExponentiation = 2;
+    final private long timeToWait = 5;
 
     // My resources to keep track of
     private MutableLiveData<Integer> crystals = new MutableLiveData<>();
@@ -41,7 +44,39 @@ public class MechanicDataManager extends ViewModel {
     public LiveData<Integer> getCrystalsPerSwing() {return crystalsPerSwing;}
     public LiveData<Integer> getPickUpgradeCost() {return pickUpgradeCost;}
     public LiveData<Integer> getMinerCost() {return minerCost;}
+    public LiveData<Integer> getMiners() {return miners;}
     public LiveData<Integer> getMinecartCost() {return minecartCost;}
+
+    // Setters for restoring the Saved Instance State
+    public void setCrystals(int amount) {crystals.setValue(amount);}
+    public void setCrystalsPerSwing(int amount) {crystalsPerSwing.setValue(amount);}
+    public void setPickCost(int amount) {pickUpgradeCost.setValue(amount);}
+    public void setMinerCost(int amount) {minerCost.setValue(amount);}
+    public void setMiners(int amount) {miners.setValue(amount);}
+    public void setMinecartCost(int amount) {minecartCost.setValue(amount);}
+
+
+
+    // For keeping data after app closes
+//    private static final String CRYSTAL_KEY = "Crystal Value";
+//    private SavedStateHandle savedStateHandle;
+////    public MutableLiveData<Float> result = new MutableLiveData<>();
+//    public MutableLiveData<Float> result ;
+//
+//    public MechanicDataManager (SavedStateHandle savedStateHandle) {
+//        this.savedStateHandle = savedStateHandle;
+//        result = savedStateHandle.getLiveData(CRYSTAL_KEY);
+//    }
+//
+//    public void setAmount(String value) {
+//        String dollarText = value;
+////        result.setValue( Float.valueOf(dollarText) * USD_TO_EU_RATE);
+//        Float convertedValue = Float.valueOf(dollarText) * 5;
+//        result.setValue(convertedValue);
+//        savedStateHandle.set(CRYSTAL_KEY, convertedValue);
+//    }
+
+
 
     //Timer to keep track of the resource mining
     private CountDownTimer timer = null;
