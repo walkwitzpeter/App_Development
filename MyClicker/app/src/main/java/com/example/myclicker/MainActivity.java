@@ -1,5 +1,7 @@
 package com.example.myclicker;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,10 +19,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
+import com.example.myclicker.databinding.ActivityHardResetBinding;
 import com.example.myclicker.databinding.ActivityMainBinding;
 import com.example.myclicker.databinding.ActivityUpgradesBinding;
 // For saving state after App Closes
 import androidx.lifecycle.SavedStateViewModelFactory;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
     // CONSTANTS
@@ -31,13 +35,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ActivityUpgradesBinding upgradesBinding;
+    //Todo new
+    private ActivityHardResetBinding hardResetBinding;
     private MechanicDataManager mechanicDataManager;
 
     private final String TAG = "Debug";
 
 
-
-    // Saving state after app closes
+    // Saving state after app closes (Methods/ideas taken from the following website)
+    // https://stackoverflow.com/questions/151777/how-can-i-save-an-activity-state-using-the-save-instance-state
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -74,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         upgradesBinding = ActivityUpgradesBinding.inflate(getLayoutInflater());
+        hardResetBinding = ActivityHardResetBinding.inflate(getLayoutInflater());
+
         View view = binding.getRoot();
         setContentView(view);
 
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         binding.upgradeButton.setOnClickListener(
             new View.OnClickListener() {
                 public void onClick(View view) {
-                    displayPopupWindow();
+                    displayUpgradeWindow();
                     upgradesBinding.pickUpgrade.setText(pickUpgradeString +
                             mechanicDataManager.getPickUpgradeCost().getValue().toString());
                     upgradesBinding.minerButton.setText(minerUpgradeString +
@@ -112,6 +120,31 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         );
+
+        binding.hardResetButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        displayResetWarning(); //TODO use a fragment here?
+                    }
+                }
+        );
+
+    }
+
+
+    // This controls the upgrades window (Taken from the website below)
+    // https://stackoverflow.com/questions/41277504/darken-background-after-popup-window-opened-android
+    public void displayUpgradeWindow() {
+//        upgradesBinding = ActivityUpgradesBinding.inflate(getLayoutInflater());
+        View view = upgradesBinding.getRoot();
+        final PopupWindow popup = new PopupWindow(this);
+        popup.setContentView(view);
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        popup.setWidth(popUpWidth);
+        popup.setHeight(popUpHeight);
+        popup.showAtLocation(view, Gravity.CENTER, 0, 0);
+        popup.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         upgradesBinding.pickUpgrade.setOnClickListener(
                 new View.OnClickListener() {
@@ -133,69 +166,39 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-
     }
 
-    // This controls the upgrades window
-    public void displayPopupWindow() {
-//        upgradesBinding = ActivityUpgradesBinding.inflate(getLayoutInflater());
-        View view = upgradesBinding.getRoot();
-        final PopupWindow popup = new PopupWindow(this);
+    // Website for matching parent parameters below
+    // https://stackoverflow.com/questions/43637608/how-to-android-popup-window-match-sreen-size-width
+    public void displayResetWarning() {
+        View view = hardResetBinding.getRoot();
+        final PopupWindow popup = new PopupWindow(view);
         popup.setContentView(view);
         popup.setOutsideTouchable(true);
         popup.setFocusable(true);
-        popup.setWidth(popUpWidth);
+        popup.setWidth(MATCH_PARENT);
         popup.setHeight(popUpHeight);
         popup.showAtLocation(view, Gravity.CENTER, 0, 0);
         popup.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-//        mechanicDataManager = new ViewModelProvider(this).get(MechanicDataManager.class);
+        hardResetBinding.cancelButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        popup.dismiss();
+                    }
+                }
+        );
 
-        // This section controls all the upgrade mechanics
-//        upgradesBinding.minerButton.setText("Buy a Miner: " + minerCost);
-//        upgradesBinding.minerButton.setOnClickListener(
-//            new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-////                    if (crystals >= minerCost) {
-////                        crystals -= minerCost;
-////                        minerCost += 1;
-////                        miners += 1;
-////
-////                        mechanicDataManager.startTimer();
-////
-////                        binding2.minerButton.setText("Buy a Miner: " + minerCost);
-////                        binding.crystalNumber.setText(String.valueOf(crystals));
-////                    }
-////                    else {
-////                        // Somehow print that they r dumb
-//////                        crystals = 0;
-//////                        binding.crystalNumber.setText(String.valueOf(crystals));
-////                    }
-//                }
-//        });
-//        // The Popupwindow code was taken and edited from
-//        //https://stackoverflow.com/questions/41277504/darken-background-after-popup-window-opened-android
-//        // This is for the pick upgrade
-//        upgradesBinding.pickUpgrade.setText("Upgrade Pick : " + pickCost);
-//        upgradesBinding.pickUpgrade.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-////                        if (crystals >= pickCost) {
-////                            crystals -= pickCost;
-////                            pickCost += 1;
-////                            crystalsPerSwing += 1;
-////                            binding2.pickUpgrade.setText("Upgrade Pick: " + pickCost);
-////                            binding.crystalNumber.setText(String.valueOf(crystals));
-////                        }
-////                        else {
-////                            // Somehow print that they r dumb
-//////                            crystals = 0;
-//////                            binding.crystalNumber.setText(String.valueOf(crystals));
-////                        }
-//                    }
-//                });
+        hardResetBinding.hardResetButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        // Set crystalsPerSwing to 0 in order to fulfill condition in initializer
+                        mechanicDataManager.setCrystalsPerSwing(0);
+                        mechanicDataManager.initializer();
+                        popup.dismiss();
+                    }
+                }
+        );
 
     }
 

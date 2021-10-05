@@ -56,40 +56,17 @@ public class MechanicDataManager extends ViewModel {
     public void setMinecartCost(int amount) {minecartCost.setValue(amount);}
 
 
-
-    // For keeping data after app closes
-//    private static final String CRYSTAL_KEY = "Crystal Value";
-//    private SavedStateHandle savedStateHandle;
-////    public MutableLiveData<Float> result = new MutableLiveData<>();
-//    public MutableLiveData<Float> result ;
-//
-//    public MechanicDataManager (SavedStateHandle savedStateHandle) {
-//        this.savedStateHandle = savedStateHandle;
-//        result = savedStateHandle.getLiveData(CRYSTAL_KEY);
-//    }
-//
-//    public void setAmount(String value) {
-//        String dollarText = value;
-////        result.setValue( Float.valueOf(dollarText) * USD_TO_EU_RATE);
-//        Float convertedValue = Float.valueOf(dollarText) * 5;
-//        result.setValue(convertedValue);
-//        savedStateHandle.set(CRYSTAL_KEY, convertedValue);
-//    }
-
-
-
     //Timer to keep track of the resource mining
     private CountDownTimer timer = null;
 
     public void initializer() {
-        if (crystals.getValue() == null) {
+        if (crystals.getValue() == null || crystalsPerSwing.getValue() == 0) {
             crystals.setValue(initialCrystals);
             crystalsPerSwing.setValue(initialCrystalsPerSwing);
             pickUpgradeCost.setValue(initialPickCost);
             minerCost.setValue(initialMinerCost);
             miners.setValue(initialMiners);
         }
-//        Log.i("TAG", "called init");
     }
 
     public void startMinerTimer() {
@@ -100,7 +77,6 @@ public class MechanicDataManager extends ViewModel {
 
             public void onFinish () {
                 crystals.setValue(crystals.getValue() + miners.getValue() * crystalsPerMiner);
-//                Log.i("TAG", "finish timer");
                 timer.start();
             }
         }.start();
@@ -108,7 +84,6 @@ public class MechanicDataManager extends ViewModel {
     }
 
     public void addCrystals(int crystalsToAdd) {
-//        Log.i("TAG", Integer.toString(crystalsToAdd));
         crystals.setValue(crystals.getValue() + crystalsToAdd);
     }
 
