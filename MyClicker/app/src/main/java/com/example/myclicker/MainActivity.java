@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
@@ -35,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ActivityUpgradesBinding upgradesBinding;
-    //Todo new
     private ActivityHardResetBinding hardResetBinding;
     private MechanicDataManager mechanicDataManager;
 
@@ -124,7 +127,19 @@ public class MainActivity extends AppCompatActivity {
         binding.hardResetButton.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        displayResetWarning(); //TODO use a fragment here?
+                        displayResetWarning();
+                    }
+                }
+        );
+
+        // Idea for link to other activity (other mine) taken from this website
+        // https://stackoverflow.com/questions/4186021/how-to-start-new-activity-on-button-click
+        binding.worldButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        Intent myIntent = new Intent(MainActivity.this, DiamondMine.class);
+//                        myIntent.putExtra("dataManager", mechanicDataManager.getDiamonds().getValue());
+                        MainActivity.this.startActivity(myIntent);
                     }
                 }
         );

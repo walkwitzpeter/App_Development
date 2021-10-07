@@ -39,6 +39,8 @@ public class MechanicDataManager extends ViewModel {
     private MutableLiveData<Integer> miners = new MutableLiveData<>();
     private MutableLiveData<Integer> minecartCost = new MutableLiveData<>();
 
+    private MutableLiveData<Integer> diamonds = new MutableLiveData<>();
+
     // Getters for needed items
     public LiveData<Integer> getCrystals() {return crystals;}
     public LiveData<Integer> getCrystalsPerSwing() {return crystalsPerSwing;}
@@ -47,6 +49,8 @@ public class MechanicDataManager extends ViewModel {
     public LiveData<Integer> getMiners() {return miners;}
     public LiveData<Integer> getMinecartCost() {return minecartCost;}
 
+    public LiveData<Integer> getDiamonds() {return diamonds;}
+
     // Setters for restoring the Saved Instance State
     public void setCrystals(int amount) {crystals.setValue(amount);}
     public void setCrystalsPerSwing(int amount) {crystalsPerSwing.setValue(amount);}
@@ -54,6 +58,8 @@ public class MechanicDataManager extends ViewModel {
     public void setMinerCost(int amount) {minerCost.setValue(amount);}
     public void setMiners(int amount) {miners.setValue(amount);}
     public void setMinecartCost(int amount) {minecartCost.setValue(amount);}
+
+    public void setDiamonds(int amount) {diamonds.setValue(amount);}
 
 
     //Timer to keep track of the resource mining
@@ -66,6 +72,16 @@ public class MechanicDataManager extends ViewModel {
             pickUpgradeCost.setValue(initialPickCost);
             minerCost.setValue(initialMinerCost);
             miners.setValue(initialMiners);
+        }
+    }
+
+    public void diamondInitializer() {
+        if (diamonds.getValue() == null) {
+            diamonds.setValue(initialCrystals);
+//            crystalsPerSwing.setValue(initialCrystalsPerSwing);
+//            pickUpgradeCost.setValue(initialPickCost);
+//            minerCost.setValue(initialMinerCost);
+//            miners.setValue(initialMiners);
         }
     }
 
@@ -85,6 +101,10 @@ public class MechanicDataManager extends ViewModel {
 
     public void addCrystals(int crystalsToAdd) {
         crystals.setValue(crystals.getValue() + crystalsToAdd);
+    }
+
+    public void addDiamonds(int diamondsToAdd) {
+        diamonds.setValue(diamonds.getValue() + diamondsToAdd);
     }
 
     public void pickUpgrade() {

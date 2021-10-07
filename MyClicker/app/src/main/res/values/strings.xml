@@ -11,4 +11,6 @@
     <string name="upgrade_your_pick">Upgrade Your Pick</string>
     <string name="reset_warning">Warning: You are about to reset all progress.</string>
     <string name="continue_question">Continue?</string>
+    <string name="diamonds">Diamonds:</string>
+    <string name="diamond_mine">Diamond Mine</string>
 </resources>
