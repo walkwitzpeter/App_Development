@@ -11,13 +11,11 @@
         android:id="@+id/miner_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
         android:text="@string/buy_a_miner"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.311" />
+        app:layout_constraintTop_toBottomOf="@+id/pick_upgrade" />
 
     <TextView
         android:id="@+id/textView"
@@ -36,12 +34,8 @@
         android:id="@+id/minecart_upgrade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="125dp"
-        android:layout_marginBottom="23dp"
+        android:layout_marginTop="21dp"
         android:text="@string/buy_a_minecart"
-        app:layout_constraintBottom_toTopOf="@+id/pick_upgrade"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/miner_button" />
@@ -50,10 +44,18 @@
         android:id="@+id/pick_upgrade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:layout_marginBottom="323dp"
+        android:layout_marginTop="53dp"
         android:text="@string/upgrade_your_pick"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/softResetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:text="@string/mystery_reset"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/minecart_upgrade" />

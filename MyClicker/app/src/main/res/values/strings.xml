@@ -13,4 +13,5 @@
     <string name="continue_question">Continue?</string>
     <string name="diamonds">Diamonds:</string>
     <string name="diamond_mine">Diamond Mine</string>
+    <string name="mystery_reset">Mystery Reset</string>
 </resources>

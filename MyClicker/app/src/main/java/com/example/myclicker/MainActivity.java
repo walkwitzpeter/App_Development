@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.example.myclicker.databinding.ActivityHardResetBinding;
 import com.example.myclicker.databinding.ActivityMainBinding;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     // CONSTANTS
     private final String pickUpgradeString = "Pick Upgrade: ";
     private final String minerUpgradeString = "Buy a Miner: ";
+    private final String cartUpgradeString = "Buy a Minecart: ";
+    private final String softResetString = "Mystery Reset: ";
     private final int popUpWidth = 800;
     private final int popUpHeight = 1100;
 
@@ -55,27 +58,32 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putInt("MyPickCost", mechanicDataManager.getPickUpgradeCost().getValue());
         savedInstanceState.putInt("MyMinerCost", mechanicDataManager.getMinerCost().getValue());
         savedInstanceState.putInt("MyMiners", mechanicDataManager.getMiners().getValue());
+        savedInstanceState.putInt("MyMinecartCost", mechanicDataManager.getMinecartCost().getValue());
+        savedInstanceState.putInt("MyCrystalsPerMiner", mechanicDataManager.crystalsPerMiner);
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(Bundle savedInstanceState)   {
         super.onRestoreInstanceState(savedInstanceState);
         int savedCrystals = savedInstanceState.getInt("MyCrystals");
         int savedCrystalsPerSwing = savedInstanceState.getInt("MyCrystalsPerSwing");
         int savedPickCost = savedInstanceState.getInt("MyPickCost");
         int savedMinerCost = savedInstanceState.getInt("MyMinerCost");
         int savedMiners = savedInstanceState.getInt("MyMiners");
+        int savedMinecartCost = savedInstanceState.getInt("MyMinecartCost");
+        int savedCrystalsPerMiner = savedInstanceState.getInt("MyCrystalsPerMiner");
         mechanicDataManager.setCrystals(savedCrystals);
         mechanicDataManager.setCrystalsPerSwing(savedCrystalsPerSwing);
         mechanicDataManager.setPickCost(savedPickCost);
         mechanicDataManager.setMinerCost(savedMinerCost);
         mechanicDataManager.setMiners(savedMiners);
+        mechanicDataManager.setMinecartCost(savedMinecartCost);
+        mechanicDataManager.crystalsPerMiner = savedCrystalsPerMiner;
 
         // These are used to restart/set the things needed at startup
         binding.crystalNumber.setText(mechanicDataManager.getCrystals().getValue().toString());
         mechanicDataManager.startMinerTimer();
     }
-
 
 
     @Override
@@ -92,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         mechanicDataManager.initializer();
         mechanicDataManager.startMinerTimer();
         binding.crystalNumber.setText(mechanicDataManager.getCrystals().getValue().toString());
-//        Log.i(TAG, mechanicDataManager.getCrystals().getValue().toString());
+        mechanicDataManager.startIdleTimer();
 
         final Observer<Integer> timeObserver = new Observer<Integer>() {
             @Override
@@ -100,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.crystalNumber.setText(crystalValue.toString());
             }
         };
-
         mechanicDataManager.getCrystals().observe(this, timeObserver);
 
         binding.crystalMine.setOnClickListener(
@@ -120,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
                             mechanicDataManager.getPickUpgradeCost().getValue().toString());
                     upgradesBinding.minerButton.setText(minerUpgradeString +
                             mechanicDataManager.getMinerCost().getValue().toString());
+                    upgradesBinding.minecartUpgrade.setText(cartUpgradeString +
+                            mechanicDataManager.getMinecartCost().getValue().toString());
+                    upgradesBinding.softResetButton.setText(softResetString +
+                            mechanicDataManager.softResetCost);
                 }
             }
         );
@@ -139,7 +150,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent myIntent = new Intent(MainActivity.this, DiamondMine.class);
 //                        myIntent.putExtra("dataManager", mechanicDataManager.getDiamonds().getValue());
-                        MainActivity.this.startActivity(myIntent);
+                        // see if I can pass in my mechanic data manager
+//                        myIntent.putExtra("mechanicDataManager", mechanicDataManager);
+//                        MainActivity.this.startActivity(myIntent);
                     }
                 }
         );
@@ -150,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
     // This controls the upgrades window (Taken from the website below)
     // https://stackoverflow.com/questions/41277504/darken-background-after-popup-window-opened-android
     public void displayUpgradeWindow() {
-//        upgradesBinding = ActivityUpgradesBinding.inflate(getLayoutInflater());
         View view = upgradesBinding.getRoot();
         final PopupWindow popup = new PopupWindow(this);
         popup.setContentView(view);
@@ -177,6 +189,27 @@ public class MainActivity extends AppCompatActivity {
                         mechanicDataManager.addMiner();
                         upgradesBinding.minerButton.setText(minerUpgradeString +
                                 mechanicDataManager.getMinerCost().getValue().toString());
+                    }
+                }
+        );
+
+        upgradesBinding.minecartUpgrade.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        mechanicDataManager.minecartUpgrade();
+                        upgradesBinding.minecartUpgrade.setText(cartUpgradeString +
+                                mechanicDataManager.getMinecartCost().getValue().toString());
+                    }
+                }
+        );
+
+        upgradesBinding.softResetButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        mechanicDataManager.softReset();
+                        upgradesBinding.softResetButton.setText(softResetString +
+                                mechanicDataManager.softResetCost);
+                        upgradesBinding.softResetButton.destroyDrawingCache();
                     }
                 }
         );
@@ -215,6 +248,14 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+    }
+
+    // Used to detect a tap anywhere on the screen
+    // https://stackoverflow.com/questions/32068562/how-to-detect-user-interaction-in-android
+    @Override
+    public void onUserInteraction()
+    {
+        mechanicDataManager.resetIdleTimer();
     }
 
 }

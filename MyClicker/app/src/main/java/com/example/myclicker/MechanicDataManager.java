@@ -1,35 +1,37 @@
 package com.example.myclicker;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.PopupWindow;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myclicker.databinding.ActivityMainBinding;
-import com.example.myclicker.databinding.ActivityUpgradesBinding;
+import java.util.Timer;
 
 // Used for saving state after closed
-import androidx.lifecycle.SavedStateHandle;
+
 
 public class MechanicDataManager extends ViewModel {
     // Constants
-    private final int initialCrystals = 0;
+    private final int initialCrystals = 9999999;
     private final int initialCrystalsPerSwing = 1;
     private final int initialPickCost = 1;
     private final int initialMinerCost = 1;
     private final int initialMiners = 0;
-    private final int crystalsPerMiner = 1;
-    private final int pickCostExponentiation = 4;
-    private final int crystalsPerSwingExponentiation = 2;
-    private final int minerCostExponentiation = 2;
-    final private long timeToWait = 5;
+    private final int initialMinecartCost = 1;
+    public int crystalsPerMiner = 1;    // This is changed by an upgrade
+    public int softResetCost = 10000;  // This is changed by an upgrade
+    public boolean idle = false;  // This is changed by a timer
+    private final int softResetExponentiation = 2;
+    // Exponentiation variables
+    private int pickCostExponentiation = 10;
+    private int crystalsPerSwingExponentiation = 2;
+    private int minerCostExponentiation = 5;
+    private int minecartCostExponentiation = 10;
+
+    private final long minerTimeToWait = 5;
+    private final long idleTimeToWait = 10;
 
     // My resources to keep track of
     private MutableLiveData<Integer> crystals = new MutableLiveData<>();
@@ -63,7 +65,8 @@ public class MechanicDataManager extends ViewModel {
 
 
     //Timer to keep track of the resource mining
-    private CountDownTimer timer = null;
+    private CountDownTimer minerTimer = null;
+    private CountDownTimer idleTimer = null;
 
     public void initializer() {
         if (crystals.getValue() == null || crystalsPerSwing.getValue() == 0) {
@@ -72,6 +75,7 @@ public class MechanicDataManager extends ViewModel {
             pickUpgradeCost.setValue(initialPickCost);
             minerCost.setValue(initialMinerCost);
             miners.setValue(initialMiners);
+            minecartCost.setValue(initialMinecartCost);
         }
     }
 
@@ -86,17 +90,39 @@ public class MechanicDataManager extends ViewModel {
     }
 
     public void startMinerTimer() {
-        timer = new CountDownTimer(timeToWait*1000, 1000) {
+        minerTimer = new CountDownTimer(minerTimeToWait * 1000, 1000) {
 
             public void onTick (long milliToFinish) {
             }
 
             public void onFinish () {
                 crystals.setValue(crystals.getValue() + miners.getValue() * crystalsPerMiner);
-                timer.start();
+                minerTimer.start();
             }
         }.start();
 
+    }
+
+    public void startIdleTimer() {
+        idleTimer = new CountDownTimer(idleTimeToWait * 1000, 1000) {
+
+            public void onTick (long milliToFinish) {
+            }
+
+            public void onFinish () {
+                crystalsPerMiner *= 2;
+                idle = true;
+            }
+        }.start();
+    }
+
+    public void resetIdleTimer() {
+        if (idle = true && crystalsPerMiner > 1) {
+            crystalsPerMiner /= 2;
+        }
+        idle = false;
+        idleTimer.cancel();
+        idleTimer.start();
     }
 
     public void addCrystals(int crystalsToAdd) {
@@ -123,6 +149,38 @@ public class MechanicDataManager extends ViewModel {
         }
     }
 
+    public void minecartUpgrade() {
+        if (crystals.getValue() >= minecartCost.getValue()) {
+            crystals.setValue(crystals.getValue() - minecartCost.getValue());
+            crystalsPerMiner *= 2;
+            minecartCost.setValue(minecartCost.getValue() * minecartCostExponentiation);
+        }
+    }
+
+    public void softReset () {
+        if (pickCostExponentiation > 2) {
+            if (crystals.getValue() >= softResetCost) {
+                crystals.setValue(initialCrystals);
+                pickUpgradeCost.setValue(initialPickCost);
+                crystalsPerSwing.setValue(initialCrystalsPerSwing);
+                miners.setValue(initialMiners);
+                minerCost.setValue(initialMinerCost);
+                crystalsPerMiner = 1;
+                minecartCost.setValue(initialMinecartCost);
+                softResetCost *= softResetExponentiation;
+
+                // Making the exponentiation smaller
+                pickCostExponentiation -= 1;
+                minecartCostExponentiation -= 1;
+                if (minerCostExponentiation > 2) {
+                    minerCostExponentiation -= 1;
+                }
+            }
+        }
+        else {
+            Log.i("TAG", "already max upgraded");
+        }
+    }
 
 
 }
