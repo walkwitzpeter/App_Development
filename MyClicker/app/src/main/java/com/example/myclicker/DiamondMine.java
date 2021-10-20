@@ -60,7 +60,7 @@ public class DiamondMine extends AppCompatActivity {
         setContentView(view);
 
 //        mechanicDataManager = new ViewModelProvider(this).get(MechanicDataManager.class);
-        mechanicDataManager.diamondInitializer();
+//        mechanicDataManager.diamondInitializer();
         Log.i("TAG", "crystals" + mechanicDataManager.getCrystals().getValue());
 
         final Observer<Integer> timeObserver = new Observer<Integer>() {
@@ -75,7 +75,7 @@ public class DiamondMine extends AppCompatActivity {
         diamondBinding.diamondMine.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        mechanicDataManager.addDiamonds(1);
+//                        mechanicDataManager.addDiamonds(1);
                     }
                 }
         );

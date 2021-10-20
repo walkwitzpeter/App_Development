@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -27,9 +28,13 @@ import android.widget.RelativeLayout;
 import com.example.myclicker.databinding.ActivityHardResetBinding;
 import com.example.myclicker.databinding.ActivityMainBinding;
 import com.example.myclicker.databinding.ActivityUpgradesBinding;
+import com.example.myclicker.databinding.DenseCrystalBinding;
 // For saving state after App Closes
 import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.viewpager.widget.ViewPager;
+
+import java.util.Random;
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     // CONSTANTS
@@ -39,13 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private final String softResetString = "Mystery Reset: ";
     private final int popUpWidth = 800;
     private final int popUpHeight = 1100;
+    private final Random random = new Random();
+    private PopupWindow denseCrystal;
 
     private ActivityMainBinding binding;
     private ActivityUpgradesBinding upgradesBinding;
     private ActivityHardResetBinding hardResetBinding;
+    private DenseCrystalBinding denseCrystalBinding;
     private MechanicDataManager mechanicDataManager;
-
-    private final String TAG = "Debug";
 
 
     // Saving state after app closes (Methods/ideas taken from the following website)
@@ -60,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putInt("MyMiners", mechanicDataManager.getMiners().getValue());
         savedInstanceState.putInt("MyMinecartCost", mechanicDataManager.getMinecartCost().getValue());
         savedInstanceState.putInt("MyCrystalsPerMiner", mechanicDataManager.crystalsPerMiner);
+
+        // Data for the soft-reset
+        savedInstanceState.putInt("SoftResetCost", mechanicDataManager.softResetCost);
+        savedInstanceState.putInt("PickCostExpo", mechanicDataManager.pickCostExponentiation);
+        savedInstanceState.putInt("CrystalsSwingExpo", mechanicDataManager.crystalsPerSwingExponentiation);
+        savedInstanceState.putInt("MinerCostExpo", mechanicDataManager.minerCostExponentiation);
+        savedInstanceState.putInt("MinecartCostExpo", mechanicDataManager.minecartCostExponentiation);
     }
 
     @Override
@@ -80,6 +93,18 @@ public class MainActivity extends AppCompatActivity {
         mechanicDataManager.setMinecartCost(savedMinecartCost);
         mechanicDataManager.crystalsPerMiner = savedCrystalsPerMiner;
 
+        // Data for the soft-reset
+        int savedResetCost = savedInstanceState.getInt("SoftResetCost");
+        int savedPickCostExpo = savedInstanceState.getInt("PickCostExpo");
+        int savedCrystalsSwingExpo = savedInstanceState.getInt("CrystalsSwingExpo");
+        int savedMinerCostExpo = savedInstanceState.getInt("MinerCostExpo");
+        int savedMinecartCostExpo = savedInstanceState.getInt("MinecartCostExpo");
+        mechanicDataManager.softResetCost = savedResetCost;
+        mechanicDataManager.pickCostExponentiation = savedPickCostExpo;
+        mechanicDataManager.crystalsPerSwingExponentiation = savedCrystalsSwingExpo;
+        mechanicDataManager.minerCostExponentiation = savedMinerCostExpo;
+        mechanicDataManager.minecartCostExponentiation = savedMinecartCostExpo;
+
         // These are used to restart/set the things needed at startup
         binding.crystalNumber.setText(mechanicDataManager.getCrystals().getValue().toString());
         mechanicDataManager.startMinerTimer();
@@ -92,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         upgradesBinding = ActivityUpgradesBinding.inflate(getLayoutInflater());
         hardResetBinding = ActivityHardResetBinding.inflate(getLayoutInflater());
+        denseCrystalBinding = DenseCrystalBinding.inflate(getLayoutInflater());
 
         View view = binding.getRoot();
         setContentView(view);
@@ -101,14 +127,30 @@ public class MainActivity extends AppCompatActivity {
         mechanicDataManager.startMinerTimer();
         binding.crystalNumber.setText(mechanicDataManager.getCrystals().getValue().toString());
         mechanicDataManager.startIdleTimer();
+        mechanicDataManager.startDenseCrystalTimer();
 
-        final Observer<Integer> timeObserver = new Observer<Integer>() {
+        final Observer<Integer> crystalObserver = new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable final Integer crystalValue) {
                 binding.crystalNumber.setText(crystalValue.toString());
             }
         };
-        mechanicDataManager.getCrystals().observe(this, timeObserver);
+        mechanicDataManager.getCrystals().observe(this, crystalObserver);
+
+        final Observer<Integer> denseCrystalObserver = new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (mechanicDataManager.denseCrystalWait.getValue() <= 1) {
+                    if (denseCrystal != null) {
+                        if (denseCrystal.isShowing()) {
+                            denseCrystal.dismiss();
+                        }
+                    }
+                    displayDenseCrystal();
+                }
+            }
+        };
+        mechanicDataManager.getDenseWait().observe(this, denseCrystalObserver);
 
         binding.crystalMine.setOnClickListener(
                 new View.OnClickListener() {
@@ -244,6 +286,34 @@ public class MainActivity extends AppCompatActivity {
                         mechanicDataManager.setCrystalsPerSwing(0);
                         mechanicDataManager.initializer();
                         popup.dismiss();
+                    }
+                }
+        );
+
+    }
+
+    public void displayDenseCrystal() {
+//        View view = hardResetBinding.getRoot();
+        View view = denseCrystalBinding.getRoot();
+//        Log.i(DenseCrystalBinding.getRoot() + "DCB");
+        denseCrystal = new PopupWindow(view);
+        denseCrystal.setContentView(view);
+        denseCrystal.setOutsideTouchable(true);
+        denseCrystal.setFocusable(true);
+        denseCrystal.setWidth(75);
+        denseCrystal.setHeight(75);
+        int x = random.nextInt(900) + 50;
+        int y = random.nextInt(1050) + 300;
+        Log.i("TAG", "x:" + x + " y:" + y);
+        denseCrystal.showAtLocation(view, Gravity.NO_GRAVITY, x, y);
+        denseCrystal.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        denseCrystalBinding.denseCrystalButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        mechanicDataManager.addCrystals(
+                                mechanicDataManager.getCrystalsPerSwing().getValue() * 10);
+                        denseCrystal.dismiss();
                     }
                 }
         );

@@ -1,20 +1,26 @@
 package com.example.myclicker;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.PopupWindow;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Random;
 import java.util.Timer;
-
-// Used for saving state after closed
 
 
 public class MechanicDataManager extends ViewModel {
     // Constants
-    private final int initialCrystals = 9999999;
+    public MutableLiveData<Integer> denseCrystalWait = new MutableLiveData<>(10);
+    private final int initialCrystals = 999999;
     private final int initialCrystalsPerSwing = 1;
     private final int initialPickCost = 1;
     private final int initialMinerCost = 1;
@@ -25,10 +31,10 @@ public class MechanicDataManager extends ViewModel {
     public boolean idle = false;  // This is changed by a timer
     private final int softResetExponentiation = 2;
     // Exponentiation variables
-    private int pickCostExponentiation = 10;
-    private int crystalsPerSwingExponentiation = 2;
-    private int minerCostExponentiation = 5;
-    private int minecartCostExponentiation = 10;
+    public int pickCostExponentiation = 10;
+    public int crystalsPerSwingExponentiation = 2;
+    public int minerCostExponentiation = 5;
+    public int minecartCostExponentiation = 10;
 
     private final long minerTimeToWait = 5;
     private final long idleTimeToWait = 10;
@@ -67,6 +73,9 @@ public class MechanicDataManager extends ViewModel {
     //Timer to keep track of the resource mining
     private CountDownTimer minerTimer = null;
     private CountDownTimer idleTimer = null;
+//    private MutableLiveData<CountDownTimer> denseCrystalTimer = null;
+    private CountDownTimer denseCrystalTimer = null;
+    private Random random = new Random();
 
     public void initializer() {
         if (crystals.getValue() == null || crystalsPerSwing.getValue() == 0) {
@@ -76,18 +85,25 @@ public class MechanicDataManager extends ViewModel {
             minerCost.setValue(initialMinerCost);
             miners.setValue(initialMiners);
             minecartCost.setValue(initialMinecartCost);
+
+            // For the hard-reset
+            softResetCost = 10000;
+            pickCostExponentiation = 10;
+            crystalsPerSwingExponentiation = 2;
+            minerCostExponentiation = 5;
+            minecartCostExponentiation = 10;
         }
     }
 
-    public void diamondInitializer() {
-        if (diamonds.getValue() == null) {
-            diamonds.setValue(initialCrystals);
-//            crystalsPerSwing.setValue(initialCrystalsPerSwing);
-//            pickUpgradeCost.setValue(initialPickCost);
-//            minerCost.setValue(initialMinerCost);
-//            miners.setValue(initialMiners);
-        }
-    }
+//    public void diamondInitializer() {
+//        if (diamonds.getValue() == null) {
+//            diamonds.setValue(initialCrystals);
+////            crystalsPerSwing.setValue(initialCrystalsPerSwing);
+////            pickUpgradeCost.setValue(initialPickCost);
+////            minerCost.setValue(initialMinerCost);
+////            miners.setValue(initialMiners);
+//        }
+//    }
 
     public void startMinerTimer() {
         minerTimer = new CountDownTimer(minerTimeToWait * 1000, 1000) {
@@ -117,21 +133,41 @@ public class MechanicDataManager extends ViewModel {
     }
 
     public void resetIdleTimer() {
-        if (idle = true && crystalsPerMiner > 1) {
+        if (idle) {
             crystalsPerMiner /= 2;
         }
-        idle = false;
         idleTimer.cancel();
+        idle = false;
         idleTimer.start();
+    }
+
+    public void startDenseCrystalTimer() {
+        denseCrystalTimer = new CountDownTimer(denseCrystalWait.getValue() * 1000, 1000) {
+
+            public void onTick (long milliToFinish) {
+                denseCrystalWait.setValue((int)milliToFinish);
+            }
+
+            public void onFinish () {
+                denseCrystalWait.setValue(1);
+                denseCrystalTimer.start();
+            }
+        }.start();
+    }
+
+    // test thing to observe
+//    MutableLiveData<CountDownTimer> test =
+    public MutableLiveData<Integer> getDenseWait () {
+        return denseCrystalWait;
     }
 
     public void addCrystals(int crystalsToAdd) {
         crystals.setValue(crystals.getValue() + crystalsToAdd);
     }
 
-    public void addDiamonds(int diamondsToAdd) {
-        diamonds.setValue(diamonds.getValue() + diamondsToAdd);
-    }
+//    public void addDiamonds(int diamondsToAdd) {
+//        diamonds.setValue(diamonds.getValue() + diamondsToAdd);
+//    }
 
     public void pickUpgrade() {
         if (crystals.getValue() >= pickUpgradeCost.getValue()) {
@@ -181,6 +217,40 @@ public class MechanicDataManager extends ViewModel {
             Log.i("TAG", "already max upgraded");
         }
     }
+
+
+    // This is a test popup to see what happens with my "DENSE CRYSTALS"
+//    public void displayResetWarning() {
+//        View view = hardResetBinding.getRoot();
+//        final PopupWindow popup = new PopupWindow(view);
+//        popup.setContentView(view);
+//        popup.setOutsideTouchable(true);
+//        popup.setFocusable(true);
+//        popup.setWidth(MATCH_PARENT);
+//        popup.setHeight(popUpHeight);
+//        popup.showAtLocation(view, Gravity.CENTER, 0, 0);
+//        popup.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//
+//        hardResetBinding.cancelButton.setOnClickListener(
+//                new View.OnClickListener() {
+//                    public void onClick(View view) {
+//                        popup.dismiss();
+//                    }
+//                }
+//        );
+//
+//        hardResetBinding.hardResetButton.setOnClickListener(
+//                new View.OnClickListener() {
+//                    public void onClick(View view) {
+//                        // Set crystalsPerSwing to 0 in order to fulfill condition in initializer
+//                        mechanicDataManager.setCrystalsPerSwing(0);
+//                        mechanicDataManager.initializer();
+//                        popup.dismiss();
+//                    }
+//                }
+//        );
+//
+//    }
 
 
 }
