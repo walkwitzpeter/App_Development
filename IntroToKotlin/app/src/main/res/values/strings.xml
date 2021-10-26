@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">IntroToKotlin</string>
+    <string name="what_is_your_favorite_season">What is your favorite season?</string>
+    <string name="fall">Fall</string>
+    <string name="winter">Winter</string>
+    <string name="summer">Summer</string>
+    <string name="spring">Spring</string>
+    <string name="answer">Answer</string>
+</resources>

@@ -20,7 +20,7 @@ import java.util.Timer;
 public class MechanicDataManager extends ViewModel {
     // Constants
     public MutableLiveData<Integer> denseCrystalWait = new MutableLiveData<>(10);
-    private final int initialCrystals = 999999;
+    private final int initialCrystals = 99999;
     private final int initialCrystalsPerSwing = 1;
     private final int initialPickCost = 1;
     private final int initialMinerCost = 1;
