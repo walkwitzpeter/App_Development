@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">tryRadio</string>
+    <string name="spring">Spring</string>
+    <string name="summer">Summer</string>
+    <string name="fall">Fall</string>
+    <string name="winter">Winter</string>
+    <string name="ChosenCheckBoxes">Chosen Check Boxes: </string>
+    <string name="none">None</string>
+</resources>

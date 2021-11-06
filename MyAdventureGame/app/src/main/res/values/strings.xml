@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Adventure Game</string>
+    <string name="entrance_room">Entrance Room</string>
+    <string name="inventory">Inventory</string>
+    <string name="go_north">Go North</string>
+    <string name="go_east">Go East</string>
+    <string name="go_west">Go West</string>
+    <string name="go_south">Go South</string>
+    <string name="map">Map</string>
+</resources>
