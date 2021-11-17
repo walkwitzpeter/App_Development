@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/east_bedroom_search.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/frag_east_bedroom.xml" value="0.25" />
+        <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/frag_west_bedroom.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/fragment_east_bedroom.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/main_activity.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/main_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/west_bedroom_search.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/walkw/AndroidStudioProjects/MyAdventureGame/app/src/main/res/layout/west_secret_room.xml" value="0.22447916666666667" />
       </map>
     </option>
   </component>

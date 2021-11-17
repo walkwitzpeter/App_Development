@@ -9,5 +9,35 @@
         android:id="@+id/mainFragment"
         android:name="com.example.myadventuregame.ui.main.MainFragment"
         android:label="main_fragment"
-        tools:layout="@layout/main_fragment" />
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_eastBedroomFrag"
+            app:destination="@id/eastBedroomFrag" />
+        <action
+            android:id="@+id/action_mainFragment_to_westBedroomFrag"
+            app:destination="@id/westBedroomFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/eastBedroomFrag"
+        android:name="com.example.myadventuregame.ui.main.EastBedroomFrag"
+        android:label="EastBedroomFrag" >
+        <action
+            android:id="@+id/action_eastBedroomFrag_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/westBedroomFrag"
+        android:name="com.example.myadventuregame.ui.main.WestBedroomFrag"
+        android:label="WestBedroomFrag" >
+        <action
+            android:id="@+id/action_westBedroomFrag_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_westBedroomFrag_to_secretRoomFragment"
+            app:destination="@id/secretRoomFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/secretRoomFragment"
+        android:name="com.example.myadventuregame.ui.main.SecretRoomFragment"
+        android:label="SecretRoomFragment" />
 </navigation>

@@ -9,4 +9,10 @@
     <string name="map">Map</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bedroom">Bedroom</string>
+    <string name="search_room">Search Room</string>
+    <string name="why_not">Why not</string>
+    <string name="i_don_t_know_what_s_back_there">I don\'t know what\'s back there!</string>
+    <string name="hidden_closet">Hidden Closet</string>
+    <string name="bad_idea">Bad Idea!</string>
 </resources>
