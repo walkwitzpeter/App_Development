@@ -54,6 +54,7 @@ class EastBedroomFrag : Fragment() {
         }
         eastBedroomBinding.westButton.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.mainFragment)
+            viewModel.lastRoomFragment = "entrance"
         }
         eastBedroomBinding.eastButton.setOnClickListener {
             activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
@@ -80,17 +81,30 @@ class EastBedroomFrag : Fragment() {
             val noString : String = "Spiders can only mean bad news, if there are constantly a few " +
                     "trickling out imagine how many are truly in there they likely would have killed " +
                     "you with their poison. Wise choice."
+            val searchedString : String = "You have already found a crowbar in this room."
 
             // PopUp Window Buttons
-            val yesButton : Button = popupView.findViewById<View>(R.id.yes_button) as Button
-            val noButton : Button = popupView.findViewById<View>(R.id.no_button) as Button
+            val yesButton : Button = popupView.findViewById<View>(R.id.search_again_button) as Button
+            val noButton : Button = popupView.findViewById<View>(R.id.fight_button) as Button
+            if (viewModel.crowbar) {
+                popupView.findViewById<TextView>(R.id.intro_text).text = searchedString
+                yesButton.visibility = View.INVISIBLE
+                noButton.visibility = View.INVISIBLE
+            }
             yesButton.setOnClickListener {
                 popupView.findViewById<TextView>(R.id.result_text).text = yesString
+                yesButton.visibility = View.INVISIBLE
+                noButton.visibility = View.INVISIBLE
                 viewModel.crowbar = true
             }
             noButton.setOnClickListener {
                 popupView.findViewById<TextView>(R.id.result_text).text = noString
+                yesButton.visibility = View.INVISIBLE
+                noButton.visibility = View.INVISIBLE
             }
+        }
+        eastBedroomBinding.inventoryButton.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.inventoryFrag)
         }
         
     }

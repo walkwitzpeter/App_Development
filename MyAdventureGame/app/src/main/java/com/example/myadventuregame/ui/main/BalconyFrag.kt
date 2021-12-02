@@ -12,24 +12,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.myadventuregame.R
-import com.example.myadventuregame.databinding.FragWestBedroomBinding
+import com.example.myadventuregame.databinding.UpstairsBalconyBinding
 
-class WestBedroomFrag : Fragment() {
+class BalconyFrag : Fragment() {
 
     companion object {
-        fun newInstance() = WestBedroomFrag()
+        fun newInstance() = BalconyFrag()
     }
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var westBedroomBinding: FragWestBedroomBinding
+    private lateinit var balconyBinding: UpstairsBalconyBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        westBedroomBinding = FragWestBedroomBinding.inflate(layoutInflater)
+        balconyBinding = UpstairsBalconyBinding.inflate(layoutInflater)
 
-        return westBedroomBinding.root
+        return balconyBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,27 +39,22 @@ class WestBedroomFrag : Fragment() {
         val unavailableText : String = "You look but see nowhere to go that way."
 
         // Navigation Buttons
-        westBedroomBinding.northButton.setOnClickListener {
-            if (viewModel.westSecretFound && viewModel.crowbar) {
-                Navigation.findNavController(view).navigate(R.id.action_westBedroomFrag_to_secretRoomFragment)
-                viewModel.lastRoomFragment = "secretRoom"
-            }
-            else
-                activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
-        }
-        westBedroomBinding.westButton.setOnClickListener {
+        balconyBinding.northButton.setOnClickListener {
             activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
         }
-        westBedroomBinding.eastButton.setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.mainFragment)
-            viewModel.lastRoomFragment = "entrance"
-        }
-        westBedroomBinding.southButton.setOnClickListener {
+        balconyBinding.westButton.setOnClickListener {
             activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
+        }
+        balconyBinding.eastButton.setOnClickListener{
+            activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
+        }
+        balconyBinding.southButton.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.northStairwellFrag)
+            viewModel.lastRoomFragment = "stairwell"
         }
 
         //Activity Buttons
-        westBedroomBinding.searchButton.setOnClickListener {
+        balconyBinding.searchButton.setOnClickListener {
             val popupView: View = LayoutInflater.from(activity)
                 .inflate(com.example.myadventuregame.R.layout.west_bedroom_search, null)
             val popupWindow = PopupWindow(popupView, 500, 800)
@@ -107,7 +102,7 @@ class WestBedroomFrag : Fragment() {
             else
                 popupView.findViewById<TextView>(R.id.intro_text).text = searchString
         }
-        westBedroomBinding.inventoryButton.setOnClickListener {
+        balconyBinding.inventoryButton.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.inventoryFrag)
         }
 

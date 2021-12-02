@@ -15,4 +15,12 @@
     <string name="i_don_t_know_what_s_back_there">I don\'t know what\'s back there!</string>
     <string name="hidden_closet">Hidden Closet</string>
     <string name="bad_idea">Bad Idea!</string>
+    <string name="close_inventory">Close Inventory</string>
+    <string name="second_floor_key_not_obtained">Second Floor Key: Not Obtained</string>
+    <string name="crowbar_not_obtained">Crowbar: Not Obtained</string>
+    <string name="not_obtained">Not Obtained</string>
+    <string name="crowbar">Crowbar:</string>
+    <string name="second_floor_key">Second Floor Key:</string>
+    <string name="north_stairwell">North Stairwell</string>
+    <string name="balcony">Balcony</string>
 </resources>

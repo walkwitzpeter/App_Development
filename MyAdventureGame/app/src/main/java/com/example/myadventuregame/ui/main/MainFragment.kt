@@ -40,18 +40,27 @@ class MainFragment : Fragment() {
 
         // Navigation Buttons
         entranceFragmentBinding.northButton.setOnClickListener {
-            activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
+            Navigation.findNavController(view).navigate(R.id.northStairwellFrag)
+            viewModel.lastRoomFragment = "stairwell"
         }
         entranceFragmentBinding.westButton.setOnClickListener {
-            // Moving to the west bedroom
             Navigation.findNavController(view).navigate(R.id.westBedroomFrag)
+            viewModel.lastRoomFragment = "westBedroom"
         }
         entranceFragmentBinding.eastButton.setOnClickListener {
-            // Moving to the east bedroom
             Navigation.findNavController(view).navigate(R.id.eastBedroomFrag)
+            viewModel.lastRoomFragment = "eastBedroom"
         }
         entranceFragmentBinding.southButton.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.westBedroomFrag)
+            activity?.let { it1 -> viewModel.displayMessage(unavailableText, it1) }
+        }
+
+        // Interaction Buttons
+        entranceFragmentBinding.searchButton.setOnClickListener {
+            activity?.let { it1 -> viewModel.displayMessage("Nothing interesting here", it1) }
+        }
+        entranceFragmentBinding.inventoryButton.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.inventoryFrag)
         }
     }
 

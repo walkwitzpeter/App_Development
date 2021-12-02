@@ -16,6 +16,12 @@
         <action
             android:id="@+id/action_mainFragment_to_westBedroomFrag"
             app:destination="@id/westBedroomFrag" />
+        <action
+            android:id="@+id/action_mainFragment_to_inventoryFrag"
+            app:destination="@id/inventoryFrag" />
+        <action
+            android:id="@+id/action_mainFragment_to_northStairwellFrag"
+            app:destination="@id/northStairwellFrag" />
     </fragment>
     <fragment
         android:id="@+id/eastBedroomFrag"
@@ -24,6 +30,9 @@
         <action
             android:id="@+id/action_eastBedroomFrag_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_eastBedroomFrag_to_inventoryFrag"
+            app:destination="@id/inventoryFrag" />
     </fragment>
     <fragment
         android:id="@+id/westBedroomFrag"
@@ -35,9 +44,31 @@
         <action
             android:id="@+id/action_westBedroomFrag_to_secretRoomFragment"
             app:destination="@id/secretRoomFragment" />
+        <action
+            android:id="@+id/action_westBedroomFrag_to_inventoryFrag"
+            app:destination="@id/inventoryFrag" />
     </fragment>
     <fragment
         android:id="@+id/secretRoomFragment"
-        android:name="com.example.myadventuregame.ui.main.SecretRoomFragment"
-        android:label="SecretRoomFragment" />
+        android:name="com.example.myadventuregame.ui.main.SecretRoomFrag"
+        android:label="SecretRoomFragment" >
+        <action
+            android:id="@+id/action_secretRoomFragment_to_inventoryFrag"
+            app:destination="@id/inventoryFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventoryFrag"
+        android:name="com.example.myadventuregame.ui.main.InventoryFrag"
+        android:label="InventoryFrag" />
+    <fragment
+        android:id="@+id/northStairwellFrag"
+        android:name="com.example.myadventuregame.ui.main.NorthStairwellFrag"
+        android:label="NorthStairwellFrag" >
+        <action
+            android:id="@+id/action_northStairwellFrag_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_northStairwellFrag_to_inventoryFrag"
+            app:destination="@id/inventoryFrag" />
+    </fragment>
 </navigation>
